@@ -15,5 +15,8 @@
   "bugs": {
     "url": "https://github.com/trikadin/uniconf/issues"
   },
-  "homepage": "https://github.com/trikadin/uniconf#readme"
+  "homepage": "https://github.com/trikadin/uniconf#readme",
+  "devDependencies": {
+    "jscs": "^3.0.7"
+  }
 }

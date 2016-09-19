@@ -1,6 +1,4 @@
 {
-  "esnext": true,
-
   "fileExtensions": [".js"],
   "excludeFiles": [
     "./node_modules/**",
@@ -21,6 +19,9 @@
     "value": 120,
     "allowUrlComments": true
   },
+
+  "requireUseStrict": true,
+  "requirePaddingNewLinesAfterUseStrict": true,
 
   "disallowYodaConditions": true,
   "validateQuoteMarks": "'",
