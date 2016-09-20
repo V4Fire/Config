@@ -8,7 +8,7 @@ const { option } = require('./options');
 
 const nodeEnv = option({
 	default: 'development',
-	name: 'nodeEnv',
+	name: 'env',
 	short: 'e',
 	values: {
 		prod: 'production',
