@@ -14,7 +14,7 @@ const nodeEnv = option({
 		prod: 'production',
 		dev: 'development'
 	},
-	valuesArgv: true,
+	valuesFlags: true,
 	env: 'NODE_ENV'
 });
 

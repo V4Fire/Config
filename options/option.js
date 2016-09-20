@@ -12,7 +12,7 @@ const argv = require('../core/argv');
  * @param {boolean | string} [params.env]
  * @param {string} [params.short]
  * @param {Array | Object} [params.values]
- * @param {boolean | Object | Array} [params.valuesArgv]
+ * @param {boolean | Object | Array} [params.valuesFlags]
  */
 function option(params) {
 	const {name} = params;
@@ -39,9 +39,9 @@ function option(params) {
 	} else if (params.short in argv) {
 		value = argv[params.short];
 
-	} else if (params.valuesArgv) {
+	} else if (params.valuesFlags) {
 		const
-			va = params.valuesArgv,
+			va = params.valuesFlags,
 			values = params.values;
 
 		let arg;
