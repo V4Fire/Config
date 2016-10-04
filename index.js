@@ -30,10 +30,25 @@ const
 		require(path.join(configFolder, nodeEnv))
 	);
 
+function setCacheableGetter(obj, key, getter) {
+	Object.defineProperty(obj, key, {
+		configurable: true,
+		get: () => {
+			const value = getter(config);
+			Object.defineProperty(obj, key, {
+				configurable: true,
+				value
+			});
+
+			return value;
+		}
+	})
+}
+
 (function compute(obj) {
 	$C(obj).forEach((el, key) => {
 		if (isComputed(el)) {
-			obj[key] = el(config);
+			setCacheableGetter(obj, key, el);
 
 		} else if (typeof el === 'object' && el) {
 			compute(el);
