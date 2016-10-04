@@ -42,7 +42,7 @@ function setCacheableGetter(obj, key, getter) {
 
 			return value;
 		}
-	})
+	});
 }
 
 (function compute(obj) {
