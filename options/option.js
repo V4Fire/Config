@@ -6,15 +6,15 @@ const argv = require('../core/argv');
 
 /**
  *
- * @param {Object} params
- * @param {string} params.name
+ * @param {Object} [params]
+ * @param {string} [params.name]
  * @param {?} [params.default]
  * @param {boolean | string} [params.env]
  * @param {string} [params.short]
  * @param {Array | Object} [params.values]
  * @param {boolean | Object | Array} [params.valuesFlags]
  */
-function option(params) {
+function option(params = {}) {
 	const {name} = params;
 
 	let value = params.default;
