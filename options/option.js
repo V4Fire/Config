@@ -1,69 +1,63 @@
 'use strict';
 
-const $C = require('collection.js');
+const
+	$C = require('collection.js'),
+	joi = require('joi'),
+	Sugar = require('sugar');
 
-const argv = require('../core/argv');
+const cliArgv = require('../core/argv');
+
+const
+	paramsSchema = joi.object().keys({
+		default: joi.any().default(null),
+		argv: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(true),
+		env: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(false),
+		short: joi
+			.string()
+			.min(1)
+			.max(1)
+			.regex(/^[a-z]$/i, 'short flag name')
+			.default(null)
+	});
 
 /**
  *
+ * @param {string} name
  * @param {Object} [params]
- * @param {string} [params.name]
  * @param {?} [params.default]
- * @param {boolean | string} [params.env]
+ * @param {boolean | string} [params.argv = true]
+ * @param {boolean | string} [params.env = false]
  * @param {string} [params.short]
  * @param {Array | Object} [params.values]
  * @param {boolean | Object | Array} [params.valuesFlags]
  */
-function option(params = {}) {
-	const {name} = params;
+function option(name, params = {}) {
+	if (!name || typeof name !== 'string') {
+		throw new TypeError(`Parameter "name" expected string, got ${name} (${typeof name})`);
+	}
+
+	const {argv, env, short} = joi.validate(params, paramsSchema);
 
 	let value = params.default;
 
-	if (params.values && typeof params.values === 'object') {
-		$C(params.values).forEach((el, key, data) => {
-			data[el] = el;
-		});
-	}
-
-	if (params.env) {
-		const envName = typeof params.env === 'string' ? params.env : name.toUpperCase().replace(/-/g, '_');
+	if (env) {
+		const envName = Sugar.isString(env) ? env : name.toUpperCase().replace(/-/g, '_');
 
 		if (envName in process.env) {
 			value = process.env[envName];
 		}
 	}
 
-	if (name in argv) {
-		value = argv[name];
+	if (argv) {
+		const argvName = Sugar.isString(argv) ? argv : name;
 
-	} else if (params.short in argv) {
-		value = argv[params.short];
-
-	} else if (params.valuesFlags) {
-		const
-			va = params.valuesFlags,
-			values = params.values;
-
-		let arg;
-
-		if (typeof va === 'boolean' && values) {
-			arg = $C(Array.isArray(values) ? values : Object.keys(values)).one.get((el) => {
-				return Boolean(argv[el]);
-			});
-
-		} else {
-			arg = $C(Array.isArray(va) ? va : Object.keys(va)).one.get((el) => {
-				return Boolean(argv[el]);
-			});
-		}
-
-		if (arg) {
-			value = arg;
+		if (argvName in cliArgv) {
+			value = cliArgv[argvName];
 		}
 	}
 
-	if (params.values && typeof params.values === 'object') {
-		value = value in params.values ? params.values[value] : params.default;
+	if (short && (short in cliArgv)) {
+		value = cliArgv[short];
 	}
 
 	return value;
