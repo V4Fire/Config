@@ -41,7 +41,7 @@ function option(name, params = {}) {
 	let value = params.default;
 
 	if (env) {
-		const envName = Sugar.isString(env) ? env : name.toUpperCase().replace(/-/g, '_');
+		const envName = Sugar.Object.isString(env) ? env : name.toUpperCase().replace(/-/g, '_');
 
 		if (envName in process.env) {
 			value = process.env[envName];
@@ -49,7 +49,7 @@ function option(name, params = {}) {
 	}
 
 	if (argv) {
-		const argvName = Sugar.isString(argv) ? argv : name;
+		const argvName = Sugar.Object.isString(argv) ? argv : name;
 
 		if (argvName in cliArgv) {
 			value = cliArgv[argvName];
