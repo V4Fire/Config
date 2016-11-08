@@ -206,6 +206,8 @@ Temporary Items
 *.tmproject
 tmtags
 
+test.js
 .editorconfig
-.jscsrc
+.eslintignore
+.eslintrc
 .gitignore
