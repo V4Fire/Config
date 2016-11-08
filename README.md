@@ -130,6 +130,6 @@ Platform: osx
 Windows only feature not included
 
 $ node build --windows
-Platform: osx
+Platform: windows
 Windows only feature included
 ```
