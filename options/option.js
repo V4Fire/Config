@@ -114,19 +114,18 @@ function option(name, params = {}) {
 	}
 
 	if (valuesFlags) {
-		if (Array.isArray(valuesFlags)) {
-			const val = $C(valuesFlags).one.get((el) => el in cliArgv);
+		let val = null;
 
-			if (val !== null) {
-				value = val;
-			}
+		if (Array.isArray(valuesFlags)) {
+			val = $C(valuesFlags).one.get((el) => el in cliArgv);
 
 		} else {
-			const val = $C(valuesFlags).one.get((el, key) => key in cliArgv);
+			val = $C(valuesFlags).one.get((el, key) => key in cliArgv);
+		}
 
-			if (val !== null) {
-				value = val;
-			}
+		if (val !== undefined) {
+			value = val;
+			source = 'cli';
 		}
 	}
 
@@ -134,7 +133,7 @@ function option(name, params = {}) {
 		value = coerce(value, source);
 
 		if (!validate(value, source)) {
-			throw new Error(`Invalid value "${value}" for option "${name}"`);
+			throw new Error(`Invalid value "${value}" for option "${name}"${source !== null ? `, source: ${source}` : ''}`);
 		}
 	}
 
