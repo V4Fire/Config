@@ -26,12 +26,13 @@ yarn add uniconf
 
 uniconf предоставляет простой интерфейс для использования переменных среды, параметров командной строки и создания вычисляемых в рантайме свойств, а также их преобразования и валидации.
 
-### option
+### Options
+
 Большинство расширенных возможностей предоставляет функция `option` из `uniconf/options`.
 
 Пример:
 
-`default.js`
+`config/default.js`
 ```js
 const {option: o} = require('uniconf/options');
 
@@ -75,3 +76,60 @@ $ node app
 Application listen port 3030
 ```
 
+### Сomputed options
+
+Если вам нужны в конфиге значения, которые нужно считать в рантайме (которые, скажем, зависят от других значений) -- для этого нужно использовать `computedOption` из `uniconf/options`.
+
+Пример:
+
+`config/default.js`
+
+```js
+const {option: o, computed: co} = require('uniconf/options');
+
+module.exports = {
+  build: { // конфиг для сборки проекта
+
+    // допустим, проект нужно собирать по-разному
+    // для разных платформ
+    platform: o('platform', {
+      default: 'linux',
+      env: true,
+      valuesFlags: ['linux', 'windows', 'osx'], // чтобы запускать сборку сразу с флагом --windows, например
+      validate: ['linux', 'windows', 'osx'] // в качестве валидатора можно передать список возможных значений
+    }),
+    
+    // какая-нибудь фича, которая должна быть 
+    // только в сборке для windows
+    includeWindowsOnlyFeature: co((config) => config.build.platform === 'windows')
+  }
+}
+```
+
+`build.js`
+
+```js
+const buildConfig = require('uniconf').build;
+
+console.log(`Platform: ${buildConfig.platform}`);
+console.log(
+	`Windows only feature`,
+	buildConfig.includeWindowsOnlyFeature ? 'included' : 'not included'
+)
+```
+
+Сборка:
+
+```bash
+$ node build
+Platform: linux
+Windows only feature not included
+
+$ node build --platform osx
+Platform: osx
+Windows only feature not included
+
+$ node build --windows
+Platform: osx
+Windows only feature included
+```
