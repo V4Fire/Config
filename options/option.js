@@ -24,7 +24,7 @@ const
 			.regex(/^[a-z]$/i, 'short flag name')
 			.default(null),
 
-		type: joi.valid(['boolean', 'number', 'json']),
+		type: joi.valid(Object.keys(bultInTypes)),
 
 		valuesFlags: joi.alternatives(joi.array().items(joi.string()), joi.object()),
 
@@ -42,7 +42,6 @@ const
  * @param {boolean | string} [params.env = false]
  * @param {string} [params.short]
  * @param {string} [params.type]
- * @param {Array | Object} [params.values]
  * @param {Object | Array} [params.valuesFlags]
  * @param {Function} [params.coerce]
  * @param {RegExp | Array | Function} [params.validate]
