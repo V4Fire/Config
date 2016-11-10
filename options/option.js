@@ -1,69 +1,140 @@
 'use strict';
 
-const $C = require('collection.js');
+const
+	$C = require('collection.js'),
+	joi = require('joi'),
+	Sugar = require('sugar');
 
-const argv = require('../core/argv');
+const
+	cliArgv = require('../core/argv'),
+	bultInTypes = require('../core/types');
+
+const
+	paramsSchema = joi.object().keys({
+		default: joi.any().default(null),
+
+		argv: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(true),
+
+		env: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(false),
+
+		short: joi
+			.string()
+			.min(1)
+			.max(1)
+			.regex(/^[a-z]$/i, 'short flag name')
+			.default(null),
+
+		type: joi.valid(Object.keys(bultInTypes)),
+
+		valuesFlags: joi.alternatives(joi.array().items(joi.string()), joi.object()),
+
+		coerce: joi.func(),
+
+		validate: joi.alternatives(joi.func(), joi.object().type(RegExp), joi.array())
+	});
 
 /**
  *
- * @param {Object} [params]
- * @param {string} [params.name]
+ * @param {string} name
+ * @param {Object} [params = {}]
  * @param {?} [params.default]
- * @param {boolean | string} [params.env]
+ * @param {boolean | string} [params.argv = true]
+ * @param {boolean | string} [params.env = false]
  * @param {string} [params.short]
- * @param {Array | Object} [params.values]
- * @param {boolean | Object | Array} [params.valuesFlags]
+ * @param {string} [params.type]
+ * @param {Object | Array} [params.valuesFlags]
+ * @param {Function} [params.coerce]
+ * @param {RegExp | Array | Function} [params.validate]
  */
-function option(params = {}) {
-	const {name} = params;
-
-	let value = params.default;
-
-	if (params.values && typeof params.values === 'object') {
-		$C(params.values).forEach((el, key, data) => {
-			data[el] = el;
-		});
+function option(name, params = {}) {
+	if (!name || typeof name !== 'string') {
+		throw new TypeError(`Parameter "name" expected string, got ${name} (${typeof name})`);
 	}
 
-	if (params.env) {
-		const envName = typeof params.env === 'string' ? params.env : name.toUpperCase().replace(/-/g, '_');
+	const validation = joi.validate(params, paramsSchema);
+
+	if (validation.error) {
+		throw validation.error;
+	}
+
+	params = validation.value;
+
+	if (params.type) {
+		$C.extend({deep: false, traits: true}, params, bultInTypes[params.type]);
+	}
+
+	const {argv, env, short, valuesFlags, coerce = (v) => v} = params;
+
+	let validate = () => true;
+
+	if (Sugar.Object.isRegExp(params.validate)) {
+		validate = (v) => params.validate.test(v);
+	}
+
+	if (Array.isArray(params.validate)) {
+		validate = (v) => params.validate.indexOf(v) !== -1;
+	}
+
+	if (Sugar.Object.isFunction(params.validate)) {
+		validate = params.validate;
+	}
+
+	let
+		source = null,
+		value = params.default;
+
+	if (params.default !== null) {
+		source = 'default';
+	}
+
+	if (env) {
+		const envName = Sugar.Object.isString(env) ? env : name.toUpperCase().replace(/-/g, '_');
 
 		if (envName in process.env) {
 			value = process.env[envName];
+
+			source = 'env';
 		}
 	}
 
-	if (name in argv) {
-		value = argv[name];
+	if (argv) {
+		const argvName = Sugar.Object.isString(argv) ? argv : name;
 
-	} else if (params.short in argv) {
-		value = argv[params.short];
+		if (argvName in cliArgv) {
+			value = cliArgv[argvName];
 
-	} else if (params.valuesFlags) {
-		const
-			va = params.valuesFlags,
-			values = params.values;
+			source = 'cli';
+		}
+	}
 
-		let arg;
+	if (short && (short in cliArgv)) {
+		value = cliArgv[short];
 
-		if (typeof va === 'boolean' && values) {
-			arg = $C(Array.isArray(values) ? values : Object.keys(values)).one.get((el) => {
-				return Boolean(argv[el]);
-			});
+		source = 'cli';
+	}
+
+	if (valuesFlags) {
+		let val = null;
+
+		if (Array.isArray(valuesFlags)) {
+			val = $C(valuesFlags).one.get((el) => el in cliArgv);
 
 		} else {
-			arg = $C(Array.isArray(va) ? va : Object.keys(va)).one.get((el) => {
-				return Boolean(argv[el]);
-			});
+			val = $C(valuesFlags).one.get((el, key) => key in cliArgv);
 		}
 
-		if (arg) {
-			value = arg;
+		if (val !== undefined) {
+			value = val;
+			source = 'cli';
 		}
 	}
 
-	if (params.values && typeof params.values === 'object') {
-		value = value in params.values ? params.values[value] : params.default;
+	if (value !== null) {
+		value = coerce(value, source);
+
+		if (!validate(value, source)) {
+			throw new Error(`Invalid value "${value}" for option "${name}"${source !== null ? `, source: ${source}` : ''}`);
+		}
 	}
 
 	return value;

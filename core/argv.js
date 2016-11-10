@@ -3,10 +3,10 @@
 const {argv} = process;
 
 function isFlag(str) {
-	return /^--?[a-z][a-z0-9-]*$/.test(str);
+	return /^--?[\S]+$/.test(str);
 }
 
-const parsed = argv.reduce((parsed, arg, i, argv) => {
+module.exports = argv.reduce((parsed, arg, i, argv) => {
 	if (isFlag(arg)) {
 		const next = argv[i + 1];
 
@@ -24,5 +24,3 @@ const parsed = argv.reduce((parsed, arg, i, argv) => {
 
 	return parsed;
 }, {});
-
-module.exports = parsed;

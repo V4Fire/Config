@@ -1,14 +1,20 @@
 declare module 'uniconf/options' {
-	export const option: (params?: {
-		name?: string,
+	export const option: (name: string, params?: {
 		default?: any,
+		argv?: boolean | string,
 		env?: string | boolean,
 		short?: string,
-		values?: Array<any> | {[key: string]: any},
-		valuesFlags?: boolean | Array<string>
+		type: 'boolean' | 'number' | 'json',
+		valuesFlags?: Array<string> | {[key: string]: any},
+		coerce: (value: any, source: string) => any,
+		validate: (value: any, source: string) => boolean
 	}) => any;
 
-	export const computed: <T extends Function>(handler: T) => T;
+	interface computedHandler {
+		(config: any): any;
+	}
+
+	export const computed: <T extends computedHandler>(handler: T) => T;
 }
 
 declare module 'uniconf' {
