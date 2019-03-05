@@ -15,7 +15,7 @@ const
 
 		argv: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(true),
 
-		env: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(false),
+		env: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(true),
 
 		short: joi
 			.string()
@@ -39,7 +39,7 @@ const
  * @param {Object} [params = {}]
  * @param {?} [params.default]
  * @param {boolean | string} [params.argv = true]
- * @param {boolean | string} [params.env = false]
+ * @param {boolean | string} [params.env = true]
  * @param {string} [params.short]
  * @param {string} [params.type]
  * @param {Object | Array} [params.valuesFlags]
