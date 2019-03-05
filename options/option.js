@@ -15,7 +15,7 @@ const
 
 		argv: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(true),
 
-		env: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(false),
+		env: joi.alternatives().try(joi.string().min(1), joi.boolean()).default(true),
 
 		short: joi
 			.string()
