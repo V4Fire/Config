@@ -1,6 +1,6 @@
 {
-  "name": "uniconf",
-  "version": "2.1.1",
+  "name": "@v4fire/config",
+  "version": "1.0.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -8,22 +8,29 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/trikadin/uniconf.git"
+    "url": "git+https://github.com/V4Fire/Config"
   },
-  "author": "trikadin@mail.ru",
+  "author": {
+    "name": "kobezzza",
+    "email": "kobezzza@gmail.com",
+    "url": "https://github.com/kobezzza"
+  },
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/trikadin/uniconf/issues"
+    "url": "https://github.com/V4Fire/Config/issues"
   },
-  "homepage": "https://github.com/trikadin/uniconf#readme",
+  "keywords": [
+    "V4Fire"
+  ],
+  "homepage": "https://github.com/V4Fire/Config#readme",
   "devDependencies": {
-    "babel-eslint": "^7.1.0",
-    "eslint": "^3.9.1"
+    "@babel/eslint-parser": "^7.16.3",
+    "eslint": "^8.3.0"
   },
   "dependencies": {
-    "collection.js": "^6.0.0-beta.17",
-    "joi": "^9.2.0",
-    "sugar": "^2.0.2"
+    "collection.js": "^6.7.10",
+    "joi": "^17.4.2",
+    "sugar": "^2.0.6"
   },
-  "typings": "./uniconf.d.ts"
+  "typings": "./index.d.ts"
 }

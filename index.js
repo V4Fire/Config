@@ -30,14 +30,14 @@ try {
 	config = require(path.join(configFolder, 'default'));
 
 } catch (err) {
-	throw new Error(`Uniconf can't require default config, got error: ${err}`);
+	throw new Error(`@v4fire/config can't require default config, got error: ${err}`);
 }
 
 try {
 	envConfig = require(path.join(configFolder, nodeEnv));
 
 } catch (err) {
-	console.log(`Uniconf can't require ${nodeEnv} config, got error: ${err}`);
+	console.log(`@v4fire/config can't require ${nodeEnv} config, got error: ${err}`);
 }
 
 $C.extend(true, config, envConfig);

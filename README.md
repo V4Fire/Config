@@ -1,4 +1,4 @@
-# Uniconf
+# @v4fire/config
 
 Простой [config](https://www.npmjs.com/package/config)-like конфигуратор с поддержкой параметров командной строки, переменных среды и вычисляемых опций, преобразования значений и их валидации.
 
@@ -7,34 +7,34 @@
 ### npm
 
 ```bash
-npm install uniconf --save
+npm install @v4fire/config --save
 ```
 
 ### yarn
 
 ```bash
-yarn add uniconf
+yarn add @v4fire/config
 ```
 
 ## Базовое использование
 
 - Создайте папку config в корне своего проекта
 - Внутри этой папки создайте default.js, development.js и production.js
-- Каждый из этих файлов должен экспортировать объект – uniconf берет за основу `default.js`, и подмешивает к нему `development.js` или `production.js` -- в зависимости от NODE_ENV.
+- Каждый из этих файлов должен экспортировать объект – @v4fire/config берет за основу `default.js`, и подмешивает к нему `development.js` или `production.js` -- в зависимости от NODE_ENV.
  
 ## Расширенные опции
 
-uniconf предоставляет простой интерфейс для использования переменных среды, параметров командной строки и создания вычисляемых в рантайме свойств, а также их преобразования и валидации.
+@v4fire/config предоставляет простой интерфейс для использования переменных среды, параметров командной строки и создания вычисляемых в рантайме свойств, а также их преобразования и валидации.
 
 ### Options
 
-Большинство расширенных возможностей предоставляет функция `option` из `uniconf/options`.
-
+Большинство расширенных возможностей предоставляет функция `option` из `@v4fire/config/options`.
+@v4fire/config
 Для примера возьмем случай, когда нам нужно запускать приложения на разных портах (на локальной машине на одном, на бою -- на другом):
 
 `config/default.js`
 ```js
-const {option: o} = require('uniconf/options');
+const {option: o} = require('@v4fire/config/options');
 
 module.exports = {
   port: o('port', {
@@ -57,7 +57,7 @@ module.exports = {
 
 `app.js`
 ```js
-const config = require('uniconf');
+const config = require('@v4fire/config');
 
 console.log(`Application listen port ${config.port}`);
 ```
@@ -78,14 +78,14 @@ Application listen port 3030
 
 ### Сomputed options
 
-Если вам нужны в конфиге значения, которые нужно считать в рантайме (которые, скажем, зависят от других значений) -- для этого нужно использовать `computedOption` из `uniconf/options`.
+Если вам нужны в конфиге значения, которые нужно считать в рантайме (которые, скажем, зависят от других значений) -- для этого нужно использовать `computedOption` из `@v4fire/config/options`.
 
 Пример:
 
 `config/default.js`
 
 ```js
-const {option: o, computed: co} = require('uniconf/options');
+const {option: o, computed: co} = require('@v4fire/config/options');
 
 module.exports = {
   build: { // конфиг для сборки проекта
@@ -108,7 +108,7 @@ module.exports = {
 `build.js`
 
 ```js
-const buildConfig = require('uniconf').build;
+const buildConfig = require('@v4fire/config').build;
 
 console.log(`Platform: ${buildConfig.platform}`);
 console.log(
@@ -135,7 +135,7 @@ Windows only feature included
 
 ## API
 
-### uniconf/options
+### @v4fire/config/options
 
 **option(name: string, params?: Object)**
 
@@ -186,14 +186,14 @@ Windows only feature included
 
 **Важно**: эту функцию можно использовать только внутри объекта с конфигом. Так же важно не допускать появления кольцевых зависимостей – т.е. когда две опции зависят от значений друг друга – это приведет к переполнению стека и ошибке. Однако, одна вычисляемая опция может использовать значение другой вычисляемой опции.
 
-### uniconf
+### @v4fire/config
 
 Для получения конфига достаточно импортировать модуль:
 
 ```js
-const config = require('uniconf');
+const config = require('@v4fire/config');
 ```
 
 ## Лицензия
 
-[MIT](https://github.com/trikadin/uniconf/blob/master/LICENSE)
+[MIT](https://github.com/V4Fire/Config/blob/master/LICENSE)

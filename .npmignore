@@ -4,5 +4,5 @@
 !/index.js
 !/LICENSE
 !/package.json
-!/uniconf.d.ts
-!/yarn.lock
+!/index.d.ts
+!/package-lock.json
