@@ -1,6 +1,6 @@
 {
   "name": "@v4fire/config",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "index.js",
   "scripts": {
@@ -24,13 +24,13 @@
   ],
   "homepage": "https://github.com/V4Fire/Config#readme",
   "devDependencies": {
-    "@babel/eslint-parser": "^7.16.3",
-    "eslint": "^8.3.0"
+    "@babel/eslint-parser": "7.16.3",
+    "eslint": "8.3.0"
   },
   "dependencies": {
-    "collection.js": "^6.7.10",
-    "joi": "^9.2.0",
-    "sugar": "^2.0.6"
+    "collection.js": "6.7.11",
+    "joi": "9.2.0",
+    "sugar": "2.0.6"
   },
   "typings": "./index.d.ts"
 }
